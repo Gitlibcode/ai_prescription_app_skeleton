@@ -20,7 +20,7 @@ async def process_prescription(file: UploadFile = File(...)):
     img = cv2.imdecode(np_img, cv2.IMREAD_COLOR)
 
     # ✅ Run PaddleOCR
-    result = ocr.ocr(img, cls=True)
+    result = ocr.ocr(img)
 
     # ✅ Extract text lines
     lines = [line[1][0] for res in result for line in res]
