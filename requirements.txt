@@ -1,5 +1,7 @@
 fastapi
 uvicorn
-sqlalchemy
-pydantic
+paddleocr
+paddlepaddle==3.1.1
+opencv-python
+numpy
 python-multipart
