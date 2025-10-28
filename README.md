@@ -1,0 +1,2 @@
+# ai_prescription_app_skeleton
+ai_prescription_app_skeleton
