@@ -1,4 +1,4 @@
-﻿import cv2
+import cv2
 import numpy as np
 from fastapi import APIRouter, UploadFile, File, HTTPException
 from paddleocr import PaddleOCR
@@ -14,8 +14,7 @@ def get_ocr():
     with _ocr_lock:
         if _ocr_model is None:
             print("🚀 Initializing PaddleOCR model...")
-            # ✅ Valid for PaddleOCR 3.x (no rec_algorithm arg)
-            _ocr_model = PaddleOCR(lang='en', use_angle_cls=False)
+            _ocr_model = PaddleOCR(lang='en', use_angle_cls=True)
         return _ocr_model
 
 @router.post("/process_prescription")
@@ -26,6 +25,15 @@ async def process_prescription(file: UploadFile = File(...)):
     content = await file.read()
     np_img = np.frombuffer(content, np.uint8)
     img = cv2.imdecode(np_img, cv2.IMREAD_COLOR)
+
+    if img is None:
+        raise HTTPException(status_code=400, detail="Image decoding failed.")
+
+    print("📸 Image shape:", img.shape)
+    print("📸 Image dtype:", img.dtype)
+
+    # Optional: Resize to improve OCR accuracy
+    img = cv2.resize(img, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
 
     ocr = get_ocr()
     result = ocr.ocr(img)
