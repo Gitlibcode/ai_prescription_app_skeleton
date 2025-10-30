@@ -1,10 +1,22 @@
+from fastapi import APIRouter, UploadFile, File, HTTPException
 from PIL import Image
 import io
+import numpy as np
+import cv2
+from paddleocr import PaddleOCR
+
+# Define router
+router = APIRouter(prefix="/ocr", tags=["OCR"])
+
+# Initialize OCR model once
+def get_ocr():
+    return PaddleOCR(use_angle_cls=True, lang='en')
 
 @router.post("/process_prescription")
 async def process_prescription(file: UploadFile = File(...)):
-    if not file.filename.lower().endswith((".jpg", ".jpeg", ".png")):
-        raise HTTPException(status_code=400, detail="Please upload a JPG or PNG image.")
+    # Validate file type
+    if not file.filename.lower().endswith((".jpg", ".jpeg", ".png", ".pdf")):
+        raise HTTPException(status_code=400, detail="Please upload a JPG, PNG, or PDF file.")
 
     content = await file.read()
 
@@ -19,9 +31,11 @@ async def process_prescription(file: UploadFile = File(...)):
     # Optional: Resize to improve OCR accuracy
     img = cv2.resize(img, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
 
+    # Run OCR
     ocr = get_ocr()
     result = ocr.ocr(img)
 
+    # Extract text lines
     lines = [line[1][0] for res in result for line in res]
 
     return {
