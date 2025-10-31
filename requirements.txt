@@ -1,11 +1,11 @@
-fastapi – API framework
-uvicorn – ASGI server
-nest-asyncio – Async support for notebooks
-pyngrok – Public URL for testing
-paddleocr – OCR engine
-opencv-python-headless – Image processing
-transformers – NLP with Hugging Face
-torch – Deep learning backend
-sentencepiece – Tokenizer support
-python-multipart – File uploads
-pydantic – Data validation
+fastapi
+uvicorn
+nest-asyncio
+pyngrok
+paddleocr
+opencv-python-headless
+transformers
+torch
+sentencepiece
+python-multipart
+pydantic
